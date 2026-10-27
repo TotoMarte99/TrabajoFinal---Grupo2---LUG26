@@ -1,3 +1,6 @@
 <Solution>
+  <Project Path="Dato/Dato.csproj" />
+  <Project Path="Entidad/Entidad.csproj" />
+  <Project Path="Negocio/Negocio.csproj" />
   <Project Path="TrabajoFinal - Grupo2 - LUG26/TrabajoFinal - Grupo2 - LUG26.csproj" />
 </Solution>
