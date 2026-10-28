@@ -7,7 +7,7 @@ Integrantes :
 
 
 &#x20;            Kopp, Roberto
-
+&#x20;            Soza, Fabricio
 Descripción de cada entrega parcial:
 
 Presentación y defensa del negocio: El mismo debe ser lo suficientemente complejo como para tener - al menos - tres tablas para persistir en una base de datos y algún tipo de relación entre todas
