@@ -1,0 +1,9 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TrabajoFinal___Grupo2___LUG26.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="MayoristaBebidas" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Data Source=DESKTOP-1KC2KSR\SQLEXPRESS;Initial Catalog=TP_LUG_G2;Integrated Security=True;Trust Server Certificate=True</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
