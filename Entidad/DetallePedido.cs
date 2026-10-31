@@ -13,6 +13,7 @@ namespace Entidad
         public decimal PrecioUnitario { get; set; }
         public decimal Subtotal { get; set; }
         public decimal Descuento { get; set; }
+        public string NombreProducto { get; set; } = string.Empty;
 
     }
 }
