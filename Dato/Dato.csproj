@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Entidad\Entidad.csproj" />
+    <ProjectReference Include="..\Mapper\Mapper.csproj" />
   </ItemGroup>
 
   <ItemGroup>

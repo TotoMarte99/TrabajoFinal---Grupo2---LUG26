@@ -1,17 +1,17 @@
 using Entidad;
+using Mapper;
 using Microsoft.Data.SqlClient;
 
 namespace Dato
 {
     public class ProductoDato
     {
-        // La columna Activo es nchar(10) en la BD: se guarda "1" / "0".
         public List<Producto> ObtenerTodos()
         {
             var lista = new List<Producto>();
             using var cn = Conexion.CrearConexion();
             using var cmd = new SqlCommand(
-                @"SELECT p.Id_Producto, p.Nombre, p.Id_Categoria, c.Descripcion, p.PrecioCaja,
+                @"SELECT p.Id_Producto, p.Nombre, p.Id_Categoria, c.Descripcion AS NombreCategoria, p.PrecioCaja,
                          p.StockCajas, p.StockMinimo, p.Activo
                   FROM Producto p
                   INNER JOIN Categoria c ON c.Id_Categoria = p.Id_Categoria
@@ -20,17 +20,7 @@ namespace Dato
             using var dr = cmd.ExecuteReader();
             while (dr.Read())
             {
-                lista.Add(new Producto
-                {
-                    Id = dr.GetInt32(0),
-                    Nombre = dr.GetString(1),
-                    IdCategoria = dr.GetInt32(2),
-                    NombreCategoria = dr.GetString(3),
-                    PrecioCaja = dr.GetDecimal(4),
-                    StockCajas = dr.GetInt32(5),
-                    StockMinimo = dr.GetInt32(6),
-                    Activo = dr.GetString(7).Trim() == "1"
-                });
+                lista.Add(ProductoMapper.DesdeReader(dr));
             }
             return lista;
         }
@@ -53,7 +43,7 @@ namespace Dato
                 @"INSERT INTO Producto (Nombre, Id_Categoria, PrecioCaja, StockCajas, StockMinimo, Activo)
                   OUTPUT INSERTED.Id_Producto
                   VALUES (@nombre, @cat, @precio, @stock, @minimo, @activo)", cn);
-            CargarParametros(cmd, p);
+            ProductoMapper.CargarParametros(cmd, p);
             cn.Open();
             return (int)cmd.ExecuteScalar()!;
         }
@@ -66,20 +56,10 @@ namespace Dato
                   SET Nombre = @nombre, Id_Categoria = @cat, PrecioCaja = @precio,
                       StockCajas = @stock, StockMinimo = @minimo, Activo = @activo
                   WHERE Id_Producto = @id", cn);
-            CargarParametros(cmd, p);
+            ProductoMapper.CargarParametros(cmd, p);
             cmd.Parameters.AddWithValue("@id", p.Id);
             cn.Open();
             return cmd.ExecuteNonQuery() > 0;
-        }
-
-        private static void CargarParametros(SqlCommand cmd, Producto p)
-        {
-            cmd.Parameters.AddWithValue("@nombre", p.Nombre);
-            cmd.Parameters.AddWithValue("@cat", p.IdCategoria);
-            cmd.Parameters.AddWithValue("@precio", p.PrecioCaja);
-            cmd.Parameters.AddWithValue("@stock", p.StockCajas);
-            cmd.Parameters.AddWithValue("@minimo", p.StockMinimo);
-            cmd.Parameters.AddWithValue("@activo", p.Activo ? "1" : "0");
         }
     }
 }

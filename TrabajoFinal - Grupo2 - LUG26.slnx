@@ -1,6 +1,7 @@
 <Solution>
   <Project Path="Dato/Dato.csproj" />
   <Project Path="Entidad/Entidad.csproj" />
+  <Project Path="Mapper/Mapper.csproj" Id="469852f3-2700-4746-b445-0849777f98b9" />
   <Project Path="Negocio/Negocio.csproj" />
   <Project Path="TrabajoFinal - Grupo2 - LUG26/TrabajoFinal - Grupo2 - LUG26.csproj" />
 </Solution>

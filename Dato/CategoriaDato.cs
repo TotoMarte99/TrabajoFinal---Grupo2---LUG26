@@ -1,4 +1,5 @@
 using Entidad;
+using Mapper;
 using Microsoft.Data.SqlClient;
 
 namespace Dato
@@ -14,7 +15,7 @@ namespace Dato
             using var dr = cmd.ExecuteReader();
             while (dr.Read())
             {
-                lista.Add(new Categoria { Id = dr.GetInt32(0), Descripcion = dr.GetString(1) });
+                lista.Add(CategoriaMapper.DesdeReader(dr));
             }
             return lista;
         }
@@ -24,7 +25,7 @@ namespace Dato
             using var cn = Conexion.CrearConexion();
             using var cmd = new SqlCommand(
                 "INSERT INTO Categoria (Descripcion) OUTPUT INSERTED.Id_Categoria VALUES (@desc)", cn);
-            cmd.Parameters.AddWithValue("@desc", categoria.Descripcion);
+            CategoriaMapper.CargarParametros(cmd, categoria);
             cn.Open();
             return (int)cmd.ExecuteScalar()!;
         }
@@ -34,7 +35,7 @@ namespace Dato
             using var cn = Conexion.CrearConexion();
             using var cmd = new SqlCommand(
                 "UPDATE Categoria SET Descripcion = @desc WHERE Id_Categoria = @id", cn);
-            cmd.Parameters.AddWithValue("@desc", categoria.Descripcion);
+            CategoriaMapper.CargarParametros(cmd, categoria);
             cmd.Parameters.AddWithValue("@id", categoria.Id);
             cn.Open();
             return cmd.ExecuteNonQuery() > 0;
