@@ -41,7 +41,7 @@
             dgvPedidos.RowHeadersVisible = false;
             dgvPedidos.RowHeadersWidth = 51;
             dgvPedidos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvPedidos.Size = new Size(780, 395);
+            dgvPedidos.Size = new Size(891, 341);
             dgvPedidos.TabIndex = 0;
             dgvPedidos.CellDoubleClick += dgvPedidos_CellDoubleClick;
             // 
@@ -59,7 +59,7 @@
             pnlTop.Dock = DockStyle.Top;
             pnlTop.Location = new Point(0, 0);
             pnlTop.Name = "pnlTop";
-            pnlTop.Size = new Size(780, 85);
+            pnlTop.Size = new Size(891, 85);
             pnlTop.TabIndex = 1;
             // 
             // lblCliente
@@ -93,7 +93,7 @@
             // cmbEstado
             // 
             cmbEstado.DropDownStyle = ComboBoxStyle.DropDownList;
-            cmbEstado.Items.AddRange(new object[] { "(Todos)", "confirmado", "anulado" });
+            cmbEstado.Items.AddRange(new object[] { "(Todos)", "Pendiente", "Confirmado", "Anulado" });
             cmbEstado.Location = new Point(398, 11);
             cmbEstado.Name = "cmbEstado";
             cmbEstado.Size = new Size(120, 28);
@@ -144,7 +144,7 @@
             // 
             // FrmConsultaPedidos
             // 
-            ClientSize = new Size(780, 480);
+            ClientSize = new Size(891, 426);
             Controls.Add(dgvPedidos);
             Controls.Add(pnlTop);
             Name = "FrmConsultaPedidos";
