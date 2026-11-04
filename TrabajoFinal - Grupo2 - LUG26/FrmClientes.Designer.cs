@@ -12,202 +12,309 @@
 
         private void InitializeComponent()
         {
-            this.dgvClientes = new System.Windows.Forms.DataGridView();
-            this.pnlTop = new System.Windows.Forms.Panel();
-            this.lblBuscarCuit = new System.Windows.Forms.Label();
-            this.cmbCuit = new System.Windows.Forms.ComboBox();
-            this.btnEditar = new System.Windows.Forms.Button();
-            this.btnBaja = new System.Windows.Forms.Button();
-            this.btnNuevo = new System.Windows.Forms.Button();
-            this.grpDatos = new System.Windows.Forms.GroupBox();
-            this.lblRazon = new System.Windows.Forms.Label();
-            this.txtRazon = new System.Windows.Forms.TextBox();
-            this.lblCuit = new System.Windows.Forms.Label();
-            this.txtCuit = new System.Windows.Forms.TextBox();
-            this.lblTelefono = new System.Windows.Forms.Label();
-            this.txtTelefono = new System.Windows.Forms.TextBox();
-            this.lblDireccion = new System.Windows.Forms.Label();
-            this.txtDireccion = new System.Windows.Forms.TextBox();
-            this.btnGuardar = new System.Windows.Forms.Button();
-            this.btnCancelar = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvClientes)).BeginInit();
-            this.pnlTop.SuspendLayout();
-            this.grpDatos.SuspendLayout();
-            this.SuspendLayout();
+            dgvClientes = new DataGridView();
+            grpAlta = new GroupBox();
+            lblRazon = new Label();
+            txtRazon = new TextBox();
+            lblCuit = new Label();
+            txtCuit = new TextBox();
+            lblTelefono = new Label();
+            txtTelefono = new TextBox();
+            lblDireccion = new Label();
+            txtDireccion = new TextBox();
+            btnNuevo = new Button();
+            btnGuardar = new Button();
+            btnCancelar = new Button();
+            grpBaja = new GroupBox();
+            lblCuitBaja = new Label();
+            cmbCuitBaja = new ComboBox();
+            btnBaja = new Button();
+            grpEditar = new GroupBox();
+            lblCuitEditar = new Label();
+            cmbCuitEditar = new ComboBox();
+            lblTelefonoEditar = new Label();
+            txtTelefonoEditar = new TextBox();
+            lblDireccionEditar = new Label();
+            txtDireccionEditar = new TextBox();
+            btnEditar = new Button();
+            ((System.ComponentModel.ISupportInitialize)dgvClientes).BeginInit();
+            grpAlta.SuspendLayout();
+            grpBaja.SuspendLayout();
+            grpEditar.SuspendLayout();
+            SuspendLayout();
             // 
             // dgvClientes
             // 
-            this.dgvClientes.AllowUserToAddRows = false;
-            this.dgvClientes.AllowUserToDeleteRows = false;
-            this.dgvClientes.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dgvClientes.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvClientes.MultiSelect = false;
-            this.dgvClientes.Name = "dgvClientes";
-            this.dgvClientes.ReadOnly = true;
-            this.dgvClientes.RowHeadersVisible = false;
-            this.dgvClientes.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            dgvClientes.AllowUserToAddRows = false;
+            dgvClientes.AllowUserToDeleteRows = false;
+            dgvClientes.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvClientes.ColumnHeadersHeight = 29;
+            dgvClientes.Dock = DockStyle.Fill;
+            dgvClientes.Location = new Point(0, 0);
+            dgvClientes.MultiSelect = false;
+            dgvClientes.Name = "dgvClientes";
+            dgvClientes.ReadOnly = true;
+            dgvClientes.RowHeadersVisible = false;
+            dgvClientes.RowHeadersWidth = 51;
+            dgvClientes.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvClientes.Size = new Size(860, 314);
+            dgvClientes.TabIndex = 0;
             // 
-            // pnlTop
+            // grpAlta
             // 
-            this.pnlTop.Controls.Add(this.lblBuscarCuit);
-            this.pnlTop.Controls.Add(this.cmbCuit);
-            this.pnlTop.Controls.Add(this.btnEditar);
-            this.pnlTop.Controls.Add(this.btnBaja);
-            this.pnlTop.Controls.Add(this.btnNuevo);
-            this.pnlTop.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlTop.Name = "pnlTop";
-            this.pnlTop.Size = new System.Drawing.Size(720, 46);
-            // 
-            // lblBuscarCuit
-            // 
-            this.lblBuscarCuit.AutoSize = true;
-            this.lblBuscarCuit.Location = new System.Drawing.Point(10, 17);
-            this.lblBuscarCuit.Name = "lblBuscarCuit";
-            this.lblBuscarCuit.Text = "CUIT:";
-            // 
-            // cmbCuit
-            // 
-            this.cmbCuit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbCuit.Location = new System.Drawing.Point(55, 13);
-            this.cmbCuit.Name = "cmbCuit";
-            this.cmbCuit.Size = new System.Drawing.Size(180, 21);
-            // 
-            // btnEditar
-            // 
-            this.btnEditar.Location = new System.Drawing.Point(250, 9);
-            this.btnEditar.Name = "btnEditar";
-            this.btnEditar.Size = new System.Drawing.Size(85, 28);
-            this.btnEditar.Text = "Editar";
-            this.btnEditar.Click += new System.EventHandler(this.btnEditar_Click);
-            // 
-            // btnBaja
-            // 
-            this.btnBaja.Location = new System.Drawing.Point(345, 9);
-            this.btnBaja.Name = "btnBaja";
-            this.btnBaja.Size = new System.Drawing.Size(100, 28);
-            this.btnBaja.Text = "Dar de baja";
-            this.btnBaja.Click += new System.EventHandler(this.btnBaja_Click);
-            // 
-            // btnNuevo
-            // 
-            this.btnNuevo.Location = new System.Drawing.Point(625, 9);
-            this.btnNuevo.Name = "btnNuevo";
-            this.btnNuevo.Size = new System.Drawing.Size(85, 28);
-            this.btnNuevo.Text = "Nuevo";
-            this.btnNuevo.Click += new System.EventHandler(this.btnNuevo_Click);
-            // 
-            // grpDatos
-            // 
-            this.grpDatos.Controls.Add(this.lblRazon);
-            this.grpDatos.Controls.Add(this.txtRazon);
-            this.grpDatos.Controls.Add(this.lblCuit);
-            this.grpDatos.Controls.Add(this.txtCuit);
-            this.grpDatos.Controls.Add(this.lblTelefono);
-            this.grpDatos.Controls.Add(this.txtTelefono);
-            this.grpDatos.Controls.Add(this.lblDireccion);
-            this.grpDatos.Controls.Add(this.txtDireccion);
-            this.grpDatos.Controls.Add(this.btnGuardar);
-            this.grpDatos.Controls.Add(this.btnCancelar);
-            this.grpDatos.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.grpDatos.Name = "grpDatos";
-            this.grpDatos.Size = new System.Drawing.Size(720, 145);
-            this.grpDatos.Text = "Datos del cliente";
+            grpAlta.Controls.Add(lblRazon);
+            grpAlta.Controls.Add(txtRazon);
+            grpAlta.Controls.Add(lblCuit);
+            grpAlta.Controls.Add(txtCuit);
+            grpAlta.Controls.Add(lblTelefono);
+            grpAlta.Controls.Add(txtTelefono);
+            grpAlta.Controls.Add(lblDireccion);
+            grpAlta.Controls.Add(txtDireccion);
+            grpAlta.Controls.Add(btnNuevo);
+            grpAlta.Controls.Add(btnGuardar);
+            grpAlta.Controls.Add(btnCancelar);
+            grpAlta.Dock = DockStyle.Bottom;
+            grpAlta.Location = new Point(0, 314);
+            grpAlta.Name = "grpAlta";
+            grpAlta.Size = new Size(860, 140);
+            grpAlta.TabIndex = 1;
+            grpAlta.TabStop = false;
+            grpAlta.Text = "Datos del cliente";
             // 
             // lblRazon
             // 
-            this.lblRazon.AutoSize = true;
-            this.lblRazon.Location = new System.Drawing.Point(15, 28);
-            this.lblRazon.Name = "lblRazon";
-            this.lblRazon.Text = "Razón social:";
+            lblRazon.AutoSize = true;
+            lblRazon.Location = new Point(15, 30);
+            lblRazon.Name = "lblRazon";
+            lblRazon.Size = new Size(95, 20);
+            lblRazon.TabIndex = 0;
+            lblRazon.Text = "Razón social:";
             // 
             // txtRazon
             // 
-            this.txtRazon.Location = new System.Drawing.Point(110, 25);
-            this.txtRazon.Name = "txtRazon";
-            this.txtRazon.Size = new System.Drawing.Size(260, 20);
+            txtRazon.Location = new Point(110, 27);
+            txtRazon.Name = "txtRazon";
+            txtRazon.Size = new Size(300, 27);
+            txtRazon.TabIndex = 1;
             // 
             // lblCuit
             // 
-            this.lblCuit.AutoSize = true;
-            this.lblCuit.Location = new System.Drawing.Point(390, 28);
-            this.lblCuit.Name = "lblCuit";
-            this.lblCuit.Text = "CUIT:";
+            lblCuit.AutoSize = true;
+            lblCuit.Location = new Point(440, 30);
+            lblCuit.Name = "lblCuit";
+            lblCuit.Size = new Size(43, 20);
+            lblCuit.TabIndex = 2;
+            lblCuit.Text = "CUIT:";
             // 
             // txtCuit
             // 
-            this.txtCuit.Location = new System.Drawing.Point(435, 25);
-            this.txtCuit.MaxLength = 13;
-            this.txtCuit.Name = "txtCuit";
-            this.txtCuit.Size = new System.Drawing.Size(150, 20);
+            txtCuit.Location = new Point(485, 27);
+            txtCuit.MaxLength = 13;
+            txtCuit.Name = "txtCuit";
+            txtCuit.Size = new Size(170, 27);
+            txtCuit.TabIndex = 3;
             // 
             // lblTelefono
             // 
-            this.lblTelefono.AutoSize = true;
-            this.lblTelefono.Location = new System.Drawing.Point(15, 63);
-            this.lblTelefono.Name = "lblTelefono";
-            this.lblTelefono.Text = "Teléfono:";
+            lblTelefono.AutoSize = true;
+            lblTelefono.Location = new Point(15, 65);
+            lblTelefono.Name = "lblTelefono";
+            lblTelefono.Size = new Size(70, 20);
+            lblTelefono.TabIndex = 4;
+            lblTelefono.Text = "Teléfono:";
             // 
             // txtTelefono
             // 
-            this.txtTelefono.Location = new System.Drawing.Point(110, 60);
-            this.txtTelefono.Name = "txtTelefono";
-            this.txtTelefono.Size = new System.Drawing.Size(150, 20);
+            txtTelefono.Location = new Point(110, 62);
+            txtTelefono.Name = "txtTelefono";
+            txtTelefono.Size = new Size(170, 27);
+            txtTelefono.TabIndex = 5;
             // 
             // lblDireccion
             // 
-            this.lblDireccion.AutoSize = true;
-            this.lblDireccion.Location = new System.Drawing.Point(290, 63);
-            this.lblDireccion.Name = "lblDireccion";
-            this.lblDireccion.Text = "Dirección:";
+            lblDireccion.AutoSize = true;
+            lblDireccion.Location = new Point(310, 65);
+            lblDireccion.Name = "lblDireccion";
+            lblDireccion.Size = new Size(75, 20);
+            lblDireccion.TabIndex = 6;
+            lblDireccion.Text = "Dirección:";
             // 
             // txtDireccion
             // 
-            this.txtDireccion.Location = new System.Drawing.Point(360, 60);
-            this.txtDireccion.Name = "txtDireccion";
-            this.txtDireccion.Size = new System.Drawing.Size(225, 20);
+            txtDireccion.Location = new Point(385, 62);
+            txtDireccion.Name = "txtDireccion";
+            txtDireccion.Size = new Size(270, 27);
+            txtDireccion.TabIndex = 7;
+            // 
+            // btnNuevo
+            // 
+            btnNuevo.Location = new Point(385, 100);
+            btnNuevo.Name = "btnNuevo";
+            btnNuevo.Size = new Size(85, 28);
+            btnNuevo.TabIndex = 8;
+            btnNuevo.Text = "Nuevo";
+            btnNuevo.Click += btnNuevo_Click;
             // 
             // btnGuardar
             // 
-            this.btnGuardar.Location = new System.Drawing.Point(400, 100);
-            this.btnGuardar.Name = "btnGuardar";
-            this.btnGuardar.Size = new System.Drawing.Size(85, 28);
-            this.btnGuardar.Text = "Guardar";
-            this.btnGuardar.Click += new System.EventHandler(this.btnGuardar_Click);
+            btnGuardar.Location = new Point(480, 100);
+            btnGuardar.Name = "btnGuardar";
+            btnGuardar.Size = new Size(85, 28);
+            btnGuardar.TabIndex = 9;
+            btnGuardar.Text = "Guardar";
+            btnGuardar.Click += btnGuardar_Click;
             // 
             // btnCancelar
             // 
-            this.btnCancelar.Location = new System.Drawing.Point(495, 100);
-            this.btnCancelar.Name = "btnCancelar";
-            this.btnCancelar.Size = new System.Drawing.Size(85, 28);
-            this.btnCancelar.Text = "Cancelar";
-            this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
+            btnCancelar.Location = new Point(575, 100);
+            btnCancelar.Name = "btnCancelar";
+            btnCancelar.Size = new Size(85, 28);
+            btnCancelar.TabIndex = 10;
+            btnCancelar.Text = "Cancelar";
+            btnCancelar.Click += btnCancelar_Click;
+            // 
+            // grpBaja
+            // 
+            grpBaja.Controls.Add(lblCuitBaja);
+            grpBaja.Controls.Add(cmbCuitBaja);
+            grpBaja.Controls.Add(btnBaja);
+            grpBaja.Dock = DockStyle.Bottom;
+            grpBaja.Location = new Point(0, 454);
+            grpBaja.Name = "grpBaja";
+            grpBaja.Size = new Size(860, 70);
+            grpBaja.TabIndex = 2;
+            grpBaja.TabStop = false;
+            grpBaja.Text = "Dar de baja un cliente";
+            // 
+            // lblCuitBaja
+            // 
+            lblCuitBaja.AutoSize = true;
+            lblCuitBaja.Location = new Point(15, 33);
+            lblCuitBaja.Name = "lblCuitBaja";
+            lblCuitBaja.Size = new Size(43, 20);
+            lblCuitBaja.TabIndex = 0;
+            lblCuitBaja.Text = "CUIT:";
+            // 
+            // cmbCuitBaja
+            // 
+            cmbCuitBaja.DisplayMember = "Cuit";
+            cmbCuitBaja.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbCuitBaja.Location = new Point(60, 30);
+            cmbCuitBaja.Name = "cmbCuitBaja";
+            cmbCuitBaja.Size = new Size(200, 28);
+            cmbCuitBaja.TabIndex = 1;
+            cmbCuitBaja.ValueMember = "Id";
+            // 
+            // btnBaja
+            // 
+            btnBaja.Location = new Point(280, 27);
+            btnBaja.Name = "btnBaja";
+            btnBaja.Size = new Size(100, 28);
+            btnBaja.TabIndex = 2;
+            btnBaja.Text = "Dar de baja";
+            btnBaja.Click += btnBaja_Click;
+            // 
+            // grpEditar
+            // 
+            grpEditar.Controls.Add(lblCuitEditar);
+            grpEditar.Controls.Add(cmbCuitEditar);
+            grpEditar.Controls.Add(lblTelefonoEditar);
+            grpEditar.Controls.Add(txtTelefonoEditar);
+            grpEditar.Controls.Add(lblDireccionEditar);
+            grpEditar.Controls.Add(txtDireccionEditar);
+            grpEditar.Controls.Add(btnEditar);
+            grpEditar.Dock = DockStyle.Bottom;
+            grpEditar.Location = new Point(0, 524);
+            grpEditar.Name = "grpEditar";
+            grpEditar.Size = new Size(860, 116);
+            grpEditar.TabIndex = 3;
+            grpEditar.TabStop = false;
+            grpEditar.Text = "Actualizar datos del cliente";
+            // 
+            // lblCuitEditar
+            // 
+            lblCuitEditar.AutoSize = true;
+            lblCuitEditar.Location = new Point(15, 33);
+            lblCuitEditar.Name = "lblCuitEditar";
+            lblCuitEditar.Size = new Size(43, 20);
+            lblCuitEditar.TabIndex = 0;
+            lblCuitEditar.Text = "CUIT:";
+            // 
+            // cmbCuitEditar
+            // 
+            cmbCuitEditar.DisplayMember = "Cuit";
+            cmbCuitEditar.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbCuitEditar.Location = new Point(60, 30);
+            cmbCuitEditar.Name = "cmbCuitEditar";
+            cmbCuitEditar.Size = new Size(200, 28);
+            cmbCuitEditar.TabIndex = 1;
+            cmbCuitEditar.ValueMember = "Id";
+            cmbCuitEditar.SelectedIndexChanged += cmbCuitEditar_SelectedIndexChanged;
+            // 
+            // lblTelefonoEditar
+            // 
+            lblTelefonoEditar.AutoSize = true;
+            lblTelefonoEditar.Location = new Point(290, 33);
+            lblTelefonoEditar.Name = "lblTelefonoEditar";
+            lblTelefonoEditar.Size = new Size(70, 20);
+            lblTelefonoEditar.TabIndex = 2;
+            lblTelefonoEditar.Text = "Teléfono:";
+            // 
+            // txtTelefonoEditar
+            // 
+            txtTelefonoEditar.Location = new Point(365, 30);
+            txtTelefonoEditar.Name = "txtTelefonoEditar";
+            txtTelefonoEditar.Size = new Size(150, 27);
+            txtTelefonoEditar.TabIndex = 3;
+            // 
+            // lblDireccionEditar
+            // 
+            lblDireccionEditar.AutoSize = true;
+            lblDireccionEditar.Location = new Point(540, 33);
+            lblDireccionEditar.Name = "lblDireccionEditar";
+            lblDireccionEditar.Size = new Size(75, 20);
+            lblDireccionEditar.TabIndex = 4;
+            lblDireccionEditar.Text = "Dirección:";
+            // 
+            // txtDireccionEditar
+            // 
+            txtDireccionEditar.Location = new Point(620, 30);
+            txtDireccionEditar.Name = "txtDireccionEditar";
+            txtDireccionEditar.Size = new Size(215, 27);
+            txtDireccionEditar.TabIndex = 5;
+            // 
+            // btnEditar
+            // 
+            btnEditar.Location = new Point(735, 70);
+            btnEditar.Name = "btnEditar";
+            btnEditar.Size = new Size(100, 28);
+            btnEditar.TabIndex = 6;
+            btnEditar.Text = "Actualizar";
+            btnEditar.Click += btnEditar_Click;
             // 
             // FrmClientes
             // 
-            this.ClientSize = new System.Drawing.Size(720, 480);
-            this.Controls.Add(this.dgvClientes);
-            this.Controls.Add(this.grpDatos);
-            this.Controls.Add(this.pnlTop);
-            this.Name = "FrmClientes";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Clientes";
-            this.Load += new System.EventHandler(this.FrmClientes_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvClientes)).EndInit();
-            this.pnlTop.ResumeLayout(false);
-            this.pnlTop.PerformLayout();
-            this.grpDatos.ResumeLayout(false);
-            this.grpDatos.PerformLayout();
-            this.ResumeLayout(false);
+            ClientSize = new Size(860, 640);
+            Controls.Add(dgvClientes);
+            Controls.Add(grpAlta);
+            Controls.Add(grpBaja);
+            Controls.Add(grpEditar);
+            Name = "FrmClientes";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Clientes";
+            Load += FrmClientes_Load;
+            ((System.ComponentModel.ISupportInitialize)dgvClientes).EndInit();
+            grpAlta.ResumeLayout(false);
+            grpAlta.PerformLayout();
+            grpBaja.ResumeLayout(false);
+            grpBaja.PerformLayout();
+            grpEditar.ResumeLayout(false);
+            grpEditar.PerformLayout();
+            ResumeLayout(false);
         }
 
         private System.Windows.Forms.DataGridView dgvClientes;
-        private System.Windows.Forms.Panel pnlTop;
-        private System.Windows.Forms.Label lblBuscarCuit;
-        private System.Windows.Forms.ComboBox cmbCuit;
-        private System.Windows.Forms.Button btnEditar;
-        private System.Windows.Forms.Button btnBaja;
-        private System.Windows.Forms.Button btnNuevo;
-        private System.Windows.Forms.GroupBox grpDatos;
+        private System.Windows.Forms.GroupBox grpAlta;
         private System.Windows.Forms.Label lblRazon;
         private System.Windows.Forms.TextBox txtRazon;
         private System.Windows.Forms.Label lblCuit;
@@ -216,8 +323,20 @@
         private System.Windows.Forms.TextBox txtTelefono;
         private System.Windows.Forms.Label lblDireccion;
         private System.Windows.Forms.TextBox txtDireccion;
+        private System.Windows.Forms.Button btnNuevo;
         private System.Windows.Forms.Button btnGuardar;
         private System.Windows.Forms.Button btnCancelar;
+        private System.Windows.Forms.GroupBox grpBaja;
+        private System.Windows.Forms.Label lblCuitBaja;
+        private System.Windows.Forms.ComboBox cmbCuitBaja;
+        private System.Windows.Forms.Button btnBaja;
+        private System.Windows.Forms.GroupBox grpEditar;
+        private System.Windows.Forms.Label lblCuitEditar;
+        private System.Windows.Forms.ComboBox cmbCuitEditar;
+        private System.Windows.Forms.Label lblTelefonoEditar;
+        private System.Windows.Forms.TextBox txtTelefonoEditar;
+        private System.Windows.Forms.Label lblDireccionEditar;
+        private System.Windows.Forms.TextBox txtDireccionEditar;
+        private System.Windows.Forms.Button btnEditar;
     }
 }
-
