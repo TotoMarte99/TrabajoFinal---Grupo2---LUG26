@@ -11,9 +11,9 @@ namespace Entidad
         public decimal PrecioCaja { get; set; }
         public int StockCajas { get; set; }
         public int StockMinimo { get; set; }
-
         public int IdCategoria { get; set; }
         public bool Activo { get; set; }
+        public string NombreCategoria { get; set; } = string.Empty; 
 
     }
 }

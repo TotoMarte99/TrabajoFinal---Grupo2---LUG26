@@ -17,7 +17,6 @@
             mnuClientes = new ToolStripMenuItem();
             mnuProductos = new ToolStripMenuItem();
             mnuCategorias = new ToolStripMenuItem();
-            //mnuUsuarios = new ToolStripMenuItem();
             mnuVentas = new ToolStripMenuItem();
             mnuNuevoPedido = new ToolStripMenuItem();
             mnuConsultaPedidos = new ToolStripMenuItem();
@@ -36,56 +35,55 @@
             menuStrip1.Items.AddRange(new ToolStripItem[] { mnuMaestros, mnuVentas, mnuConsultas, mnuSalir });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(1000, 28);
+            menuStrip1.Size = new Size(1000, 24);
             menuStrip1.TabIndex = 1;
             // 
             // mnuMaestros
             // 
             mnuMaestros.DropDownItems.AddRange(new ToolStripItem[] { mnuClientes, mnuProductos, mnuCategorias });
             mnuMaestros.Name = "mnuMaestros";
-            mnuMaestros.Size = new Size(83, 24);
+            mnuMaestros.Size = new Size(67, 20);
             mnuMaestros.Text = "Maestros";
             // 
             // mnuClientes
             // 
             mnuClientes.Name = "mnuClientes";
-            mnuClientes.Size = new Size(224, 26);
+            mnuClientes.Size = new Size(130, 22);
             mnuClientes.Text = "Clientes";
             mnuClientes.Click += mnuClientes_Click;
             // 
             // mnuProductos
             // 
             mnuProductos.Name = "mnuProductos";
-            mnuProductos.Size = new Size(224, 26);
+            mnuProductos.Size = new Size(130, 22);
             mnuProductos.Text = "Productos";
             mnuProductos.Click += mnuProductos_Click;
             // 
             // mnuCategorias
             // 
             mnuCategorias.Name = "mnuCategorias";
-            mnuCategorias.Size = new Size(224, 26);
+            mnuCategorias.Size = new Size(130, 22);
             mnuCategorias.Text = "Categorías";
             mnuCategorias.Click += mnuCategorias_Click;
-            // 
             // 
             // mnuVentas
             // 
             mnuVentas.DropDownItems.AddRange(new ToolStripItem[] { mnuNuevoPedido, mnuConsultaPedidos });
             mnuVentas.Name = "mnuVentas";
-            mnuVentas.Size = new Size(66, 24);
+            mnuVentas.Size = new Size(53, 20);
             mnuVentas.Text = "Ventas";
             // 
             // mnuNuevoPedido
             // 
             mnuNuevoPedido.Name = "mnuNuevoPedido";
-            mnuNuevoPedido.Size = new Size(228, 26);
+            mnuNuevoPedido.Size = new Size(182, 22);
             mnuNuevoPedido.Text = "Nuevo pedido";
             mnuNuevoPedido.Click += mnuNuevoPedido_Click;
             // 
             // mnuConsultaPedidos
             // 
             mnuConsultaPedidos.Name = "mnuConsultaPedidos";
-            mnuConsultaPedidos.Size = new Size(228, 26);
+            mnuConsultaPedidos.Size = new Size(182, 22);
             mnuConsultaPedidos.Text = "Consulta de pedidos";
             mnuConsultaPedidos.Click += mnuConsultaPedidos_Click;
             // 
@@ -93,20 +91,20 @@
             // 
             mnuConsultas.DropDownItems.AddRange(new ToolStripItem[] { mnuStock });
             mnuConsultas.Name = "mnuConsultas";
-            mnuConsultas.Size = new Size(86, 24);
+            mnuConsultas.Size = new Size(71, 20);
             mnuConsultas.Text = "Consultas";
             // 
             // mnuStock
             // 
             mnuStock.Name = "mnuStock";
-            mnuStock.Size = new Size(128, 26);
+            mnuStock.Size = new Size(103, 22);
             mnuStock.Text = "Stock";
             mnuStock.Click += mnuStock_Click;
             // 
             // mnuSalir
             // 
             mnuSalir.Name = "mnuSalir";
-            mnuSalir.Size = new Size(52, 24);
+            mnuSalir.Size = new Size(41, 20);
             mnuSalir.Text = "Salir";
             mnuSalir.Click += mnuSalir_Click;
             // 
@@ -122,10 +120,11 @@
             // lblEstado
             // 
             lblEstado.Name = "lblEstado";
-            lblEstado.Size = new Size(0, 16);
+            lblEstado.Size = new Size(0, 17);
             // 
             // FrmPrincipal
             // 
+            BackColor = SystemColors.ButtonHighlight;
             ClientSize = new Size(1000, 600);
             Controls.Add(statusStrip1);
             Controls.Add(menuStrip1);

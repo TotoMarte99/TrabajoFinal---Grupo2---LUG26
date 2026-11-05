@@ -10,8 +10,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="7.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Entidad\Entidad.csproj" />
     <ProjectReference Include="..\Negocio\Negocio.csproj" />
+    <ProjectReference Include="..\Dato\Dato.csproj" />
   </ItemGroup>
 
   <ItemGroup>
