@@ -33,13 +33,6 @@ namespace TrabajoFinal___Grupo2___LUG26
                 // ---------- Grilla ----------
                 dgvClientes.DataSource = lista;
 
-                // Columnas que no se muestran (Nombre y Email vienen de la clase base y no se usan)
-                foreach (string nombre in new[] { "Id", "Nombre", "Email" })
-                {
-                    if (dgvClientes.Columns.Contains(nombre))
-                        dgvClientes.Columns[nombre].Visible = false;
-                }
-
                 dgvClientes.Columns["RazonSocial"].HeaderText = "Razón social";
                 dgvClientes.Columns["Cuit"].HeaderText = "CUIT";
                 dgvClientes.Columns["Telefono"].HeaderText = "Teléfono";
@@ -75,17 +68,10 @@ namespace TrabajoFinal___Grupo2___LUG26
         {
             try
             {
-                string cuit = txtCuit.Text.Replace("-", "").Trim();
-
-                if (cuit.Length != 11 || !cuit.All(char.IsDigit))
-                {
-                    MessageBox.Show("El CUIT debe tener 11 números.");
-                    return;
-                }
 
                 Cliente cliente = new Cliente();
                 cliente.RazonSocial = txtRazon.Text.Trim();
-                cliente.Cuit = cuit;
+                cliente.Cuit = txtCuit.Text.Replace("-", "").Trim();
                 cliente.Telefono = txtTelefono.Text.Trim();
                 cliente.Direccion = txtDireccion.Text.Trim();
                 cliente.Activo = true;
@@ -134,6 +120,7 @@ namespace TrabajoFinal___Grupo2___LUG26
                 txtTelefonoEditar.Clear();
                 txtDireccionEditar.Clear();
                 return;
+                
             }
 
             txtTelefonoEditar.Text = cliente.Telefono;

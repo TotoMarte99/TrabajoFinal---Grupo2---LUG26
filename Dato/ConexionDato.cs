@@ -7,9 +7,10 @@ namespace Dato
 {
     public class ConexionDato
     {
+        private static string Conexion = "TrabajoFinalDB";
         public SqlConnection ObtenerConexion()
         {
-            string cadena = ConfigurationManager.ConnectionStrings["TP_LUG_G2_Connection"].ConnectionString;
+            string cadena = ConfigurationManager.ConnectionStrings[Conexion].ConnectionString;
 
             return new SqlConnection(cadena);
         }

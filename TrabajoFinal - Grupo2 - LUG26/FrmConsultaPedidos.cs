@@ -10,7 +10,7 @@ namespace TrabajoFinal___Grupo2___LUG26
 {
     public partial class FrmConsultaPedidos : Form
     {
-
+        
 
         public FrmConsultaPedidos()
         {
@@ -23,13 +23,15 @@ namespace TrabajoFinal___Grupo2___LUG26
             {
 
             
-            ClienteNegocio clienteNegocio = new ClienteNegocio();
+                 
+                ClienteBLL clienteNegocio2 = new ClienteBLL();
 
-            cmbCliente.DataSource = clienteNegocio.ObtenerClientes();
+            //cmbCliente.DataSource = clienteNegocio.ObtenerClientes;
+            cmbCliente.DataSource = clienteNegocio2.ObtenerTodos();
             cmbCliente.DisplayMember = "RazonSocial";
-            cmbCliente.ValueMember = "Id_Cliente";
+            //cmbCliente.ValueMember = "Id_Cliente";
 
-           
+            cmbCliente.ValueMember = "Id";
 
             dgvPedidos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvPedidos.MultiSelect = false;
