@@ -12,12 +12,13 @@
 
         private void InitializeComponent()
         {
-            dgvStock = new System.Windows.Forms.DataGridView();
-            pnlTop = new System.Windows.Forms.Panel();
-            lblEstado = new System.Windows.Forms.Label();
-            cmbEstado = new System.Windows.Forms.ComboBox();
-            btnActualizar = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(dgvStock)).BeginInit();
+            dgvStock = new DataGridView();
+            pnlTop = new Panel();
+            label1 = new Label();
+            lblCategoria = new Label();
+            cmbCategoria = new ComboBox();
+            cmbEstado = new ComboBox();
+            ((System.ComponentModel.ISupportInitialize)dgvStock).BeginInit();
             pnlTop.SuspendLayout();
             SuspendLayout();
             // 
@@ -25,57 +26,79 @@
             // 
             dgvStock.AllowUserToAddRows = false;
             dgvStock.AllowUserToDeleteRows = false;
-            dgvStock.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            dgvStock.Dock = System.Windows.Forms.DockStyle.Fill;
+            dgvStock.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvStock.ColumnHeadersHeight = 34;
+            dgvStock.Dock = DockStyle.Fill;
+            dgvStock.Location = new Point(0, 146);
             dgvStock.MultiSelect = false;
             dgvStock.Name = "dgvStock";
             dgvStock.ReadOnly = true;
             dgvStock.RowHeadersVisible = false;
-            dgvStock.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            dgvStock.RowHeadersWidth = 62;
+            dgvStock.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvStock.Size = new Size(862, 544);
+            dgvStock.TabIndex = 0;
+            dgvStock.CellContentClick += dgvStock_CellContentClick;
             // 
             // pnlTop
             // 
-            pnlTop.Controls.Add(lblEstado);
+            pnlTop.Controls.Add(label1);
+            pnlTop.Controls.Add(lblCategoria);
+            pnlTop.Controls.Add(cmbCategoria);
             pnlTop.Controls.Add(cmbEstado);
-            pnlTop.Controls.Add(btnActualizar);
-            pnlTop.Dock = System.Windows.Forms.DockStyle.Top;
+            pnlTop.Dock = DockStyle.Top;
+            pnlTop.Location = new Point(0, 0);
             pnlTop.Name = "pnlTop";
-            pnlTop.Size = new System.Drawing.Size(720, 46);
+            pnlTop.Size = new Size(862, 146);
+            pnlTop.TabIndex = 1;
+            pnlTop.Paint += pnlTop_Paint;
             // 
-            // lblEstado
+            // label1
             // 
-            lblEstado.AutoSize = true;
-            lblEstado.Location = new System.Drawing.Point(10, 17);
-            lblEstado.Name = "lblEstado";
-            lblEstado.Text = "Mostrar:";
+            label1.AutoSize = true;
+            label1.Location = new Point(68, 43);
+            label1.Name = "label1";
+            label1.Size = new Size(70, 25);
+            label1.TabIndex = 5;
+            label1.Text = "Estado:";
+            // 
+            // lblCategoria
+            // 
+            lblCategoria.AutoSize = true;
+            lblCategoria.Location = new Point(451, 46);
+            lblCategoria.Name = "lblCategoria";
+            lblCategoria.Size = new Size(92, 25);
+            lblCategoria.TabIndex = 4;
+            lblCategoria.Text = "Categoría:";
+            // 
+            // cmbCategoria
+            // 
+            cmbCategoria.FormattingEnabled = true;
+            cmbCategoria.Location = new Point(544, 43);
+            cmbCategoria.Name = "cmbCategoria";
+            cmbCategoria.Size = new Size(210, 33);
+            cmbCategoria.TabIndex = 3;
+            cmbCategoria.SelectedIndexChanged += cmbCategoria_SelectedIndexChanged;
             // 
             // cmbEstado
             // 
-            cmbEstado.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            cmbEstado.Items.AddRange(new object[] { "Todos", "Solo los que hay que reponer", "Solo los que tienen stock" });
-            cmbEstado.Location = new System.Drawing.Point(65, 13);
+            cmbEstado.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbEstado.Location = new Point(161, 40);
             cmbEstado.Name = "cmbEstado";
-            cmbEstado.SelectedIndex = 0;
-            cmbEstado.Size = new System.Drawing.Size(210, 21);
-            // 
-            // btnActualizar
-            // 
-            btnActualizar.Location = new System.Drawing.Point(295, 9);
-            btnActualizar.Name = "btnActualizar";
-            btnActualizar.Size = new System.Drawing.Size(90, 28);
-            btnActualizar.Text = "Actualizar";
-            btnActualizar.Click += new System.EventHandler(btnActualizar_Click);
+            cmbEstado.Size = new Size(210, 33);
+            cmbEstado.TabIndex = 1;
+            cmbEstado.SelectedIndexChanged += cmbEstado_SelectedIndexChanged;
             // 
             // FrmConsultaStock
             // 
-            ClientSize = new System.Drawing.Size(720, 460);
+            ClientSize = new Size(862, 690);
             Controls.Add(dgvStock);
             Controls.Add(pnlTop);
             Name = "FrmConsultaStock";
-            StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Consulta de stock";
-            Load += new System.EventHandler(FrmConsultaStock_Load);
-            ((System.ComponentModel.ISupportInitialize)(dgvStock)).EndInit();
+            Load += FrmConsultaStock_Load;
+            ((System.ComponentModel.ISupportInitialize)dgvStock).EndInit();
             pnlTop.ResumeLayout(false);
             pnlTop.PerformLayout();
             ResumeLayout(false);
@@ -83,8 +106,9 @@
 
         private System.Windows.Forms.DataGridView dgvStock;
         private System.Windows.Forms.Panel pnlTop;
-        private System.Windows.Forms.Label lblEstado;
         private System.Windows.Forms.ComboBox cmbEstado;
-        private System.Windows.Forms.Button btnActualizar;
+        private ComboBox cmbCategoria;
+        private Label label1;
+        private Label lblCategoria;
     }
 }

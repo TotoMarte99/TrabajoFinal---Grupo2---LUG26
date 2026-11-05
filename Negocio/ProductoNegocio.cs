@@ -46,5 +46,26 @@ namespace Negocio
             if (!productoDato.Editar(producto))
                 throw new Exception("El producto no existe.");
         }
+
+        public List<Producto> ConsultarStock(int idCategoria , string estado)
+        {
+            List<Producto> productos = ObtenerProductos();
+
+            if (idCategoria > 0)
+            {
+                productos = productos.Where(p => p.IdCategoria == idCategoria).ToList();
+            }
+
+            if (estado == "Bajo el mínimo")
+            {
+                productos = productos.Where(p => p.StockCajas <= p.StockMinimo && p.StockCajas > 0).ToList();
+            }
+            else if (estado == "Sin stock")
+            {
+                productos = productos.Where(p => p.StockCajas == 0).ToList();
+            }
+
+            return productos;
+        }
     }
 }
