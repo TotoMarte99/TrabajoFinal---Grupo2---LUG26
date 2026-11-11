@@ -20,5 +20,8 @@ namespace Mapper
         {
             cmd.Parameters.AddWithValue("@desc", categoria.Descripcion);
         }
+
+        
+
     }
 }

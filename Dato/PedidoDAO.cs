@@ -1,129 +1,139 @@
-﻿using Entidad;
-using Mapper;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using System.Configuration;
+using Entidad;
+using Mapper;
 
 namespace Dato
 {
-
     public class PedidoDAO
     {
-        private static string Conexion = "TrabajoFinalDB";
+        private readonly string cadena = ConfigurationManager.ConnectionStrings["Conexion"].ConnectionString;
 
-        private ClienteDAO clienteDAO = new ClienteDAO();
-
-        public void Cargar(Pedido pedido)
-        {
-            try
-            {
-                using (SqlConnection sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings[Conexion].ConnectionString))
-                {
-                    sqlConnection.Open();
-
-                    using (SqlTransaction sqlTransaction = sqlConnection.BeginTransaction())
-                    {
-
-
-                        string sqlPedido = "INSERT INTO Pedido (Id_Cliente, Fecha, Total, Estado) " +
-                            "VALUES (@idCliente,  @fecha, @total, @estado) ";
-
-                        //int idPedido;
-                        using (SqlCommand sqlCommand = new SqlCommand(sqlPedido, sqlConnection, sqlTransaction))
-                        {
-                            sqlCommand.Parameters.AddWithValue("@idCliente", pedido.Client.Id);
-
-                            sqlCommand.Parameters.AddWithValue("@fecha", pedido.Fecha);
-                            sqlCommand.Parameters.AddWithValue("@total", pedido.Total);
-                            sqlCommand.Parameters.AddWithValue("@estado", pedido.Estado);
-                            //idPedido = (int)sqlCommand.ExecuteScalar(); // Sala el Id_Pedido de la base de datos
-
-
-                            sqlCommand.ExecuteNonQuery();
-                        }
-
-
-                    }
-                }
-            }
-            catch (Exception)
-            {
-               throw;
-            }
-                    
-                
-            
-        }
-
-        
-        public Pedido ObtenerPorId(int idPedido)
-        {
-            try
-            {
-                Pedido pedido = null;
-
-                using (SqlConnection sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings[Conexion].ConnectionString))
-                {
-                    sqlConnection.Open();
-                    string sql = "SELECT * FROM Pedido WHERE Id_Pedido = @idPedido";
-
-                    using (SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection))
-                    {
-                        sqlCommand.Parameters.AddWithValue("@idPedido", idPedido);
-
-                        using (SqlDataReader sqlDataReader = sqlCommand.ExecuteReader())
-                        {
-                            while (sqlDataReader.Read())
-                            {
-                                Cliente cliente = clienteDAO.ObtenerPorId(Convert.ToInt32(sqlDataReader["Id_Cliente"]));
-                                pedido = PedidoMapper.Map(sqlDataReader, cliente);
-
-                                return pedido;
-                            }
-                        }
-                    }
-                }
-
-                return null;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
+        DetallePedidoMapper detalleMapper = new DetallePedidoMapper();
+        // Trae los pedidos con su cliente y sus detalles
         public List<Pedido> ObtenerTodos()
         {
-            try
+            List<Pedido> pedidos = new List<Pedido>();
+
+            using (SqlConnection cn = new SqlConnection(cadena))
             {
-                List<Pedido> pedidos = new List<Pedido>();
+                cn.Open();
 
-                using (SqlConnection sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings[Conexion].ConnectionString))
+                string sql = @"SELECT p.IdPedido, p.Fecha, p.Total,
+                                      c.IdCliente, c.CUIT, c.RazonSocial
+                               FROM Pedido p
+                               JOIN Cliente c ON c.IdCliente = p.IdCliente
+                               ORDER BY p.Fecha DESC";
+
+                using (SqlCommand cmd = new SqlCommand(sql, cn))
+                using (SqlDataReader reader = cmd.ExecuteReader())
                 {
-                    sqlConnection.Open();
-                    string sql = "SELECT * FROM Pedido";
-
-                    using (SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection))
+                    while (reader.Read())
                     {
-                        using (SqlDataReader sqlDataReader = sqlCommand.ExecuteReader())
-                        {
-                            while (sqlDataReader.Read())
-                            {
-                                Cliente cliente = clienteDAO.ObtenerPorId(Convert.ToInt32(sqlDataReader["Id_Cliente"]));
-                                pedidos.Add(PedidoMapper.Map(sqlDataReader, cliente));
-                                
-                            }
-                        }
+                        Cliente cliente = ClienteMapper.Map(reader);
+                        pedidos.Add(PedidoMapper.Map(reader, cliente));
                     }
                 }
-                return pedidos;
+
+                // Los detalles se cargan aparte, con el reader anterior ya cerrado
+                foreach (Pedido pedido in pedidos)
+                    pedido.Detalles = ObtenerDetalles(cn, pedido.Id);
             }
-            catch (Exception)
-            {
-                throw;
-            }
+
+            return pedidos;
         }
 
-        
+        private List<DetallePedido> ObtenerDetalles(SqlConnection cn, int idPedido)
+        {
+            List<DetallePedido> detalles = new List<DetallePedido>();
 
+            string sql = @"SELECT dp.IdDetalle, dp.IdPedido, dp.Cantidad, dp.PrecioUnitario,
+                                  p.IdProducto, p.Nombre AS NombreProducto, p.PrecioCaja,
+                                  p.StockCajas, p.StockMinimo, p.Activo,
+                                  p.IdCategoria, c.Nombre AS NombreCategoria
+                           FROM DetallePedido dp
+                           JOIN Producto p  ON p.IdProducto  = dp.IdProducto
+                           JOIN Categoria c ON c.IdCategoria = p.IdCategoria
+                           WHERE dp.IdPedido = @IdPedido";
+
+            using (SqlCommand cmd = new SqlCommand(sql, cn))
+            {
+                cmd.Parameters.AddWithValue("@IdPedido", idPedido);
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Producto producto = ProductoMapper.DesdeReader(reader);
+                        detalles.Add(detalleMapper.Map(reader, producto));
+                    }
+                }
+            }
+
+            return detalles;
+        }
+
+        // Guarda el pedido, sus detalles y descuenta el stock en una sola transacción
+        public int Insertar(Pedido pedido)
+        {
+            using (SqlConnection cn = new SqlConnection(cadena))
+            {
+                cn.Open();
+                using (SqlTransaction tx = cn.BeginTransaction())
+                {
+                    try
+                    {
+                        string sqlPedido = @"INSERT INTO Pedido (IdCliente, Fecha, Total)
+                                             OUTPUT INSERTED.IdPedido
+                                             VALUES (@IdCliente, @Fecha, @Total)";
+
+                        int idPedido;
+                        using (SqlCommand cmd = new SqlCommand(sqlPedido, cn, tx))
+                        {
+                            // Si tu entidad Pedido no tiene IdCliente, usá pedido.Cliente.Id
+                            cmd.Parameters.AddWithValue("@IdCliente", pedido.Client.Id);
+                            cmd.Parameters.AddWithValue("@Fecha", pedido.Fecha);
+                            cmd.Parameters.AddWithValue("@Total", pedido.Total);
+                            idPedido = (int)cmd.ExecuteScalar();
+                        }
+
+                        foreach (DetallePedido d in pedido.Detalles)
+                        {
+                            string sqlDetalle = @"INSERT INTO DetallePedido (IdPedido, IdProducto, Cantidad, PrecioUnitario)
+                                                  VALUES (@IdPedido, @IdProducto, @Cantidad, @Precio)";
+
+                            using (SqlCommand cmd = new SqlCommand(sqlDetalle, cn, tx))
+                            {
+                                cmd.Parameters.AddWithValue("@IdPedido", idPedido);
+                                cmd.Parameters.AddWithValue("@IdProducto", d.Producto.Id);
+                                cmd.Parameters.AddWithValue("@Cantidad", d.Cantidad);
+                                cmd.Parameters.AddWithValue("@Precio", d.PrecioUnitario);
+                                cmd.ExecuteNonQuery();
+                            }
+
+                            string sqlStock = @"UPDATE Producto
+                                                SET StockCajas = StockCajas - @Cantidad
+                                                WHERE IdProducto = @IdProducto";
+
+                            using (SqlCommand cmd = new SqlCommand(sqlStock, cn, tx))
+                            {
+                                cmd.Parameters.AddWithValue("@Cantidad", d.Cantidad);
+                                cmd.Parameters.AddWithValue("@IdProducto", d.Producto.Id);
+                                cmd.ExecuteNonQuery();
+                            }
+                        }
+
+                        tx.Commit();
+                        return idPedido;
+                    }
+                    catch
+                    {
+                        tx.Rollback();
+                        throw;
+                    }
+                }
+            }
+        }
     }
 }
+

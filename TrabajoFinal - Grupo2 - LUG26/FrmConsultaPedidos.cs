@@ -26,20 +26,20 @@ namespace TrabajoFinal___Grupo2___LUG26
                  
                 ClienteBLL clienteNegocio2 = new ClienteBLL();
 
-            //cmbCliente.DataSource = clienteNegocio.ObtenerClientes;
-            cmbCliente.DataSource = clienteNegocio2.ObtenerTodos();
-            cmbCliente.DisplayMember = "RazonSocial";
-            //cmbCliente.ValueMember = "Id_Cliente";
+                //cmbCliente.DataSource = clienteNegocio.ObtenerClientes;
+                cmbCliente.DataSource = clienteNegocio2.ObtenerTodos();
+                cmbCliente.DisplayMember = "RazonSocial";
+                //cmbCliente.ValueMember = "Id_Cliente";
 
-            cmbCliente.ValueMember = "Id";
+                cmbCliente.ValueMember = "Id";
 
-            dgvPedidos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvPedidos.MultiSelect = false;
-            dgvPedidos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgvPedidos.ReadOnly = true;
+                dgvPedidos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+                dgvPedidos.MultiSelect = false;
+                dgvPedidos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                dgvPedidos.ReadOnly = true;
 
             
-                PedidoNegocio pedidoNegocio = new PedidoNegocio();
+                PedidoBLL pedidoNegocio = new PedidoBLL();
 
                 dgvPedidos.DataSource = pedidoNegocio.ObtenerPedidos();
 
@@ -59,7 +59,7 @@ namespace TrabajoFinal___Grupo2___LUG26
                 DateTime fechaDesde = dtpDesde.Value.Date;
                 DateTime fechaHasta = dtpHasta.Value.Date;
 
-                PedidoNegocio pedidoNegocio = new PedidoNegocio();
+                PedidoBLL pedidoNegocio = new PedidoBLL();
 
                 dgvPedidos.DataSource = pedidoNegocio.ObtenerPedidosPorCliente(idCliente, estado, fechaDesde, fechaHasta);
             }
@@ -85,7 +85,7 @@ namespace TrabajoFinal___Grupo2___LUG26
                 int idPedido = Convert.ToInt32(
                     dgvPedidos.Rows[e.RowIndex].Cells["Id_Pedido"].Value);
 
-                PedidoNegocio pedidoNegocio = new PedidoNegocio();
+                PedidoBLL pedidoNegocio = new PedidoBLL();
 
                 DataTable detalle = pedidoNegocio.ObtenerDetallePedido(idPedido);
 

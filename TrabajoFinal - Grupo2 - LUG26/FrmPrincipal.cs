@@ -20,7 +20,7 @@ namespace TrabajoFinal___Grupo2___LUG26
         private void mnuClientes_Click(object sender, EventArgs e) { Abrir(new FrmClientes()); }
         private void mnuProductos_Click(object sender, EventArgs e) { Abrir(new FrmProductos()); }
         private void mnuCategorias_Click(object sender, EventArgs e) { Abrir(new FrmCategorias()); }
-        private void mnuNuevoPedido_Click(object sender, EventArgs e) { Abrir(new FrmConsultaPedidos()); }
+        private void mnuNuevoPedido_Click(object sender, EventArgs e) { Abrir(new FrmPedido()); }
         private void mnuConsultaPedidos_Click(object sender, EventArgs e) { Abrir(new FrmConsultaPedidos()); }
         private void mnuStock_Click(object sender, EventArgs e) { Abrir(new FrmConsultaStock()); }
         private void mnuSalir_Click(object sender, EventArgs e) { Close(); }
