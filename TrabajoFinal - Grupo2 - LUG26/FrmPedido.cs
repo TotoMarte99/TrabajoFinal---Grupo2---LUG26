@@ -1,12 +1,10 @@
-﻿using Entidad;
+using Entidad;
 using Negocio;
 
 namespace TrabajoFinal___Grupo2___LUG26
 {
     public partial class FrmPedido : Form
     {
-
-
         private ClienteBLL clienteBLL = new ClienteBLL();
         private ProductoNegocio productoBLL = new ProductoNegocio();
         private PedidoBLL pedidoBLL = new PedidoBLL();
@@ -21,25 +19,35 @@ namespace TrabajoFinal___Grupo2___LUG26
 
         private void FrmPedido_Load(object sender, EventArgs e)
         {
-            CargarClientes();
-            CargarProductos();
+            try
+            {
+                CargarClientes();
+                CargarProductos();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Nuevo pedido", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
             MostrarDetalle();
-
-           
         }
 
         private void CargarClientes()
         {
+            // Solo clientes activos
             cmbCliente.DisplayMember = "RazonSocial";
             cmbCliente.ValueMember = "Id";
-            cmbCliente.DataSource = clienteBLL.ObtenerTodos();
+            cmbCliente.DataSource = clienteBLL.ObtenerTodos()
+                                              .Where(c => c.Activo)
+                                              .OrderBy(c => c.RazonSocial)
+                                              .ToList();
         }
 
         private void CargarProductos()
         {
-            // Solo productos activos y con stock
+            // Solo productos activos. Los que no tienen stock se muestran igual:
+            // el control de stock lo hace la capa Negocio al confirmar (RN-06).
             List<Producto> productos = productoBLL.ObtenerProductos()
-                                                  .Where(p => p.Activo && p.StockCajas > 0)
+                                                  .Where(p => p.Activo)
                                                   .ToList();
 
             cmbProducto.DisplayMember = "Nombre";
@@ -50,21 +58,22 @@ namespace TrabajoFinal___Grupo2___LUG26
         // Muestra precio y stock del producto elegido
         private void cmbProducto_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Producto producto = cmbProducto.SelectedItem as Producto;
-            if (producto == null) return;
+            Producto? producto = cmbProducto.SelectedItem as Producto;
+            if (producto == null)
+            {
+                lblInfo.Text = "";
+                return;
+            }
 
             lblInfo.Text = "Categoría: " + producto.NombreCategoria +
                            " | Precio por caja: " + producto.PrecioCaja.ToString("C") +
-                           " | Stock: " + producto.StockCajas + " cajas";
-
-            nudCantidad.Minimum = 1;
-            nudCantidad.Maximum = producto.StockCajas;
-            nudCantidad.Value = 1;
+                           " | Stock: " + producto.StockCajas + " cajas" +
+                           " | Descuento: 5 % desde 20 cajas, 10 % desde 50";
         }
 
         private void btnAgregar_Click(object sender, EventArgs e)
         {
-            Producto producto = cmbProducto.SelectedItem as Producto;
+            Producto? producto = cmbProducto.SelectedItem as Producto;
             if (producto == null)
             {
                 MessageBox.Show("Seleccioná un producto.");
@@ -74,26 +83,25 @@ namespace TrabajoFinal___Grupo2___LUG26
             int cantidad = (int)nudCantidad.Value;
 
             // Si el producto ya está en el detalle, se suma la cantidad
-            DetallePedido existente = detalles.FirstOrDefault(d => d.Producto.Id == producto.Id);
+            DetallePedido? detalle = detalles.FirstOrDefault(d => d.Producto.Id == producto.Id);
 
-            if (existente != null)
+            if (detalle != null)
             {
-                if (existente.Cantidad + cantidad > producto.StockCajas)
-                {
-                    MessageBox.Show("No hay stock suficiente. Disponible: " + producto.StockCajas + " cajas.");
-                    return;
-                }
-                existente.Cantidad += cantidad;
+                detalle.Cantidad += cantidad;
             }
             else
             {
-                DetallePedido detalle = new DetallePedido();
+                detalle = new DetallePedido();
                 detalle.Producto = producto;
                 detalle.Cantidad = cantidad;
                 detalle.PrecioUnitario = producto.PrecioCaja;
                 detalles.Add(detalle);
             }
 
+            // El porcentaje lo decide la capa Negocio; acá solo se muestra
+            detalle.Descuento = pedidoBLL.CalcularDescuento(detalle.Cantidad);
+
+            nudCantidad.Value = 1;
             MostrarDetalle();
         }
 
@@ -119,13 +127,24 @@ namespace TrabajoFinal___Grupo2___LUG26
         {
             try
             {
+                Cliente? cliente = cmbCliente.SelectedItem as Cliente;
+                if (cliente == null)
+                {
+                    MessageBox.Show("Seleccioná un cliente.");
+                    return;
+                }
+
                 Pedido pedido = new Pedido();
-                pedido.Client.Id = (int)cmbCliente.SelectedValue;
-                pedido.Detalles = detalles;
+                pedido.Client = cliente;
+                pedido.Detalles = new List<DetallePedido>(detalles);
 
-                int id = pedidoBLL.Confirmar(pedido);
+                int id = pedidoBLL.ConfirmarPedido(pedido);
 
-                MessageBox.Show("Pedido N° " + id + " guardado correctamente.");
+                MessageBox.Show("Pedido N° " + id + " guardado correctamente." + Environment.NewLine +
+                                "Total: " + pedido.Total.ToString("C"),
+                    "Nuevo pedido", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                AvisarReposicion(pedido);
 
                 detalles.Clear();
                 MostrarDetalle();
@@ -133,7 +152,29 @@ namespace TrabajoFinal___Grupo2___LUG26
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, "Nuevo pedido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        // RN-12: avisa si algún producto del pedido quedó en el mínimo o por debajo
+        private void AvisarReposicion(Pedido pedido)
+        {
+            try
+            {
+                List<Producto> aReponer = pedidoBLL.ObtenerAlertasStock(pedido);
+                if (aReponer.Count == 0) return;
+
+                string lineas = string.Join(Environment.NewLine,
+                    aReponer.Select(p => "- " + p.Nombre + ": quedan " + p.StockCajas +
+                                         " cajas (mínimo " + p.StockMinimo + ")"));
+
+                MessageBox.Show("Estos productos quedaron en el stock mínimo o por debajo y hay que reponerlos:" +
+                                Environment.NewLine + lineas,
+                    "Reposición", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+            catch
+            {
+                // El pedido ya quedó grabado; si falla el aviso no se interrumpe al usuario
             }
         }
 
@@ -147,12 +188,22 @@ namespace TrabajoFinal___Grupo2___LUG26
                 Categoria = d.Producto.NombreCategoria,
                 Cajas = d.Cantidad,
                 PrecioCaja = d.PrecioUnitario,
-                Subtotal = d.Cantidad * d.PrecioUnitario
+                Descuento = d.Descuento.ToString("0.##") + " %",
+                Subtotal = d.Subtotal
             }).ToList();
 
-            decimal total = detalles.Sum(d => d.Cantidad * d.PrecioUnitario);
+            if (dgvDetalle.Columns.Contains("PrecioCaja"))
+            {
+                dgvDetalle.Columns["PrecioCaja"].HeaderText = "Precio por caja";
+                dgvDetalle.Columns["PrecioCaja"].DefaultCellStyle.Format = "C2";
+            }
+            if (dgvDetalle.Columns.Contains("Subtotal"))
+                dgvDetalle.Columns["Subtotal"].DefaultCellStyle.Format = "C2";
+            if (dgvDetalle.Columns.Contains("Categoria"))
+                dgvDetalle.Columns["Categoria"].HeaderText = "Categoría";
+
+            decimal total = detalles.Sum(d => d.Subtotal);
             lblTotal.Text = "Total: " + total.ToString("C");
         }
     }
 }
-

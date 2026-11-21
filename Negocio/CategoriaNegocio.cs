@@ -22,8 +22,10 @@ namespace Negocio
             }
         }
 
+        // RN-11: solo el administrador da de alta o modifica categorías
         public void AgregarCategoria(Categoria categoria)
         {
+            Sesion.ExigirAdministrador();
             ValidarCategoria(categoria);
             categoria.Id = categoriaDato.Agregar(categoria);
             CategoriaAgregada?.Invoke(this, categoria);
@@ -31,6 +33,7 @@ namespace Negocio
 
         public void EditarCategoria(Categoria categoria)
         {
+            Sesion.ExigirAdministrador();
             ValidarCategoria(categoria);
             if (!categoriaDato.Editar(categoria))
             {
@@ -38,7 +41,6 @@ namespace Negocio
             }
         }
 
-        //Evento para suscribirse a la lista de categorías
         public event EventHandler<Categoria>? CategoriaAgregada;
     }
 }

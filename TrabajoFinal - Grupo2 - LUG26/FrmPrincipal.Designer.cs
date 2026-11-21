@@ -17,6 +17,7 @@
             mnuClientes = new ToolStripMenuItem();
             mnuProductos = new ToolStripMenuItem();
             mnuCategorias = new ToolStripMenuItem();
+            mnuUsuarios = new ToolStripMenuItem();
             mnuVentas = new ToolStripMenuItem();
             mnuNuevoPedido = new ToolStripMenuItem();
             mnuConsultaPedidos = new ToolStripMenuItem();
@@ -40,7 +41,7 @@
             // 
             // mnuMaestros
             // 
-            mnuMaestros.DropDownItems.AddRange(new ToolStripItem[] { mnuClientes, mnuProductos, mnuCategorias });
+            mnuMaestros.DropDownItems.AddRange(new ToolStripItem[] { mnuClientes, mnuProductos, mnuCategorias, mnuUsuarios });
             mnuMaestros.Name = "mnuMaestros";
             mnuMaestros.Size = new Size(67, 20);
             mnuMaestros.Text = "Maestros";
@@ -65,6 +66,13 @@
             mnuCategorias.Size = new Size(130, 22);
             mnuCategorias.Text = "Categorías";
             mnuCategorias.Click += mnuCategorias_Click;
+            // 
+            // mnuUsuarios
+            // 
+            mnuUsuarios.Name = "mnuUsuarios";
+            mnuUsuarios.Size = new Size(130, 22);
+            mnuUsuarios.Text = "Usuarios";
+            mnuUsuarios.Click += mnuUsuarios_Click;
             // 
             // mnuVentas
             // 

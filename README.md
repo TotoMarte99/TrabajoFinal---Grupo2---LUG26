@@ -28,3 +28,25 @@ Se otorgarán puntos adicionales a aquellos equipos que utilicen herramientas ad
 Git para la persistencia y seguimiento del código
 Jira / Trello o apps similares para la gestión de tareas y equipos
 
+
+
+## Cómo levantar el proyecto
+
+1. Base de datos, una de dos opciones:
+   - **Desde cero:** ejecutar `BD_TP_Grupo2.sql`. **Borra y vuelve a crear** la base `TP_LUG_G2` con datos de prueba.
+   - **Conservando la base que ya tenés:** ejecutar `BD_Actualizacion.sql`. No borra datos: agrega la tabla `Usuario`, renombra la columna `Estado` de `Pedido` y le agrega `Id_Usuario`.
+2. Revisar la cadena de conexión `TrabajoFinalDB` en `TrabajoFinal - Grupo2 - LUG26/App.config` (por defecto `localhost` con seguridad integrada; con SQL Express usar `localhost\SQLEXPRESS`).
+3. Abrir `TrabajoFinal - Grupo2 - LUG26.slnx` en Visual Studio y ejecutar el proyecto `TrabajoFinal - Grupo2 - LUG26`.
+
+Usuarios de prueba:
+
+| Usuario  | Contraseña  | Rol           |
+|----------|-------------|---------------|
+| admin    | admin123    | administrador |
+| vendedor | vendedor123 | vendedor      |
+
+## Capas
+
+`Entidad` → `Mapper` → `Dato` → `Negocio` → UI. La UI solo referencia a `Negocio` y `Entidad`.
+
+La transacción de negocio es la confirmación del pedido: `PedidoBLL.ConfirmarPedido` valida y calcula, y `PedidoDAO.ConfirmarEnTransaccion` graba cabecera, detalle y descuento de stock en una sola `SqlTransaction`.

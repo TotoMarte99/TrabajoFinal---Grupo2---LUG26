@@ -176,7 +176,7 @@ namespace TrabajoFinal___Grupo2___LUG26
             Name = "FrmNuevoPedido";
             StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             Text = "Nuevo pedido";
-            Load += new System.EventHandler(FrmNuevoPedido_Load);
+            Load += new System.EventHandler(FrmPedido_Load);
             ((System.ComponentModel.ISupportInitialize)(dgvDetalle)).EndInit();
             pnlTop.ResumeLayout(false);
             pnlTop.PerformLayout();

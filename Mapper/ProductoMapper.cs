@@ -17,11 +17,18 @@ namespace Mapper
                 PrecioCaja = dr.GetDecimal(dr.GetOrdinal("PrecioCaja")),
                 StockCajas = dr.GetInt32(dr.GetOrdinal("StockCajas")),
                 StockMinimo = dr.GetInt32(dr.GetOrdinal("StockMinimo")),
-                Activo = dr.GetString(dr.GetOrdinal("Activo")).Trim() == "1"
+                Activo = LeerActivo(dr["Activo"])
             };
         }
 
         
+        
+        private static bool LeerActivo(object valor)
+        {
+            if (valor is bool b) return b;
+            return valor.ToString()!.Trim() == "1";
+        }
+
         public static void CargarParametros(SqlCommand cmd, Producto p)
         {
             cmd.Parameters.AddWithValue("@nombre", p.Nombre);
@@ -29,7 +36,7 @@ namespace Mapper
             cmd.Parameters.AddWithValue("@precio", p.PrecioCaja);
             cmd.Parameters.AddWithValue("@stock", p.StockCajas);
             cmd.Parameters.AddWithValue("@minimo", p.StockMinimo);
-            cmd.Parameters.AddWithValue("@activo", p.Activo ? "1" : "0");
+            cmd.Parameters.AddWithValue("@activo", p.Activo);
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Negocio
         public void Insertar(Cliente cliente)
         {
             Validar(cliente);
-            clienteDAO.agregarCliente(cliente);
+            clienteDAO.Insertar(cliente);
         }
 
         public void Modificar(Cliente cliente)

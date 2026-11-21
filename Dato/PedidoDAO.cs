@@ -1,5 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
-using System.Configuration;
+using Microsoft.Data.SqlClient;
 using Entidad;
 using Mapper;
 
@@ -7,22 +6,24 @@ namespace Dato
 {
     public class PedidoDAO
     {
-        private readonly string cadena = ConfigurationManager.ConnectionStrings["Conexion"].ConnectionString;
+        private readonly DetallePedidoDAO detalleDAO = new DetallePedidoDAO();
 
-        DetallePedidoMapper detalleMapper = new DetallePedidoMapper();
-        // Trae los pedidos con su cliente y sus detalles
+        // Trae las cabeceras de los pedidos con su cliente y el usuario que los cargó.
+        // El detalle se pide aparte con DetallePedidoDAO.ObtenerPorPedido.
         public List<Pedido> ObtenerTodos()
         {
             List<Pedido> pedidos = new List<Pedido>();
 
-            using (SqlConnection cn = new SqlConnection(cadena))
+            using (SqlConnection cn = Conexion.CrearConexion())
             {
                 cn.Open();
 
-                string sql = @"SELECT p.IdPedido, p.Fecha, p.Total,
-                                      c.IdCliente, c.CUIT, c.RazonSocial
+                string sql = @"SELECT p.Id_Pedido, p.Fecha, p.Total, p.Estado,
+                                      c.Id_Cliente, c.RazonSocial, c.Cuit, c.Telefono, c.Direccion, c.Activo,
+                                      u.Id_Usuario, u.NombreUsuario, u.NombreCompleto, u.Rol
                                FROM Pedido p
-                               JOIN Cliente c ON c.IdCliente = p.IdCliente
+                               INNER JOIN Cliente c ON c.Id_Cliente = p.Id_Cliente
+                               INNER JOIN Usuario u ON u.Id_Usuario = p.Id_Usuario
                                ORDER BY p.Fecha DESC";
 
                 using (SqlCommand cmd = new SqlCommand(sql, cn))
@@ -31,95 +32,59 @@ namespace Dato
                     while (reader.Read())
                     {
                         Cliente cliente = ClienteMapper.Map(reader);
-                        pedidos.Add(PedidoMapper.Map(reader, cliente));
+
+                        // No se usa UsuarioMapper porque acá no se trae la contraseña
+                        Usuario usuario = new Usuario
+                        {
+                            Id = Convert.ToInt32(reader["Id_Usuario"]),
+                            NombreUsuario = reader["NombreUsuario"].ToString()!,
+                            NombreCompleto = reader["NombreCompleto"].ToString()!,
+                            Rol = reader["Rol"].ToString()!
+                        };
+
+                        pedidos.Add(PedidoMapper.Map(reader, cliente, usuario));
                     }
                 }
-
-                // Los detalles se cargan aparte, con el reader anterior ya cerrado
-                foreach (Pedido pedido in pedidos)
-                    pedido.Detalles = ObtenerDetalles(cn, pedido.Id);
             }
 
             return pedidos;
         }
 
-        private List<DetallePedido> ObtenerDetalles(SqlConnection cn, int idPedido)
+        public int ConfirmarEnTransaccion(Pedido pedido)
         {
-            List<DetallePedido> detalles = new List<DetallePedido>();
-
-            string sql = @"SELECT dp.IdDetalle, dp.IdPedido, dp.Cantidad, dp.PrecioUnitario,
-                                  p.IdProducto, p.Nombre AS NombreProducto, p.PrecioCaja,
-                                  p.StockCajas, p.StockMinimo, p.Activo,
-                                  p.IdCategoria, c.Nombre AS NombreCategoria
-                           FROM DetallePedido dp
-                           JOIN Producto p  ON p.IdProducto  = dp.IdProducto
-                           JOIN Categoria c ON c.IdCategoria = p.IdCategoria
-                           WHERE dp.IdPedido = @IdPedido";
-
-            using (SqlCommand cmd = new SqlCommand(sql, cn))
-            {
-                cmd.Parameters.AddWithValue("@IdPedido", idPedido);
-
-                using (SqlDataReader reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        Producto producto = ProductoMapper.DesdeReader(reader);
-                        detalles.Add(detalleMapper.Map(reader, producto));
-                    }
-                }
-            }
-
-            return detalles;
-        }
-
-        // Guarda el pedido, sus detalles y descuenta el stock en una sola transacción
-        public int Insertar(Pedido pedido)
-        {
-            using (SqlConnection cn = new SqlConnection(cadena))
+            using (SqlConnection cn = Conexion.CrearConexion())
             {
                 cn.Open();
                 using (SqlTransaction tx = cn.BeginTransaction())
                 {
                     try
                     {
-                        string sqlPedido = @"INSERT INTO Pedido (IdCliente, Fecha, Total)
-                                             OUTPUT INSERTED.IdPedido
-                                             VALUES (@IdCliente, @Fecha, @Total)";
+                        // 1. Cabecera
+                        string sqlPedido = @"INSERT INTO Pedido (Id_Cliente, Id_Usuario, Fecha, Total, Estado)
+                                             OUTPUT INSERTED.Id_Pedido
+                                             VALUES (@idCliente, @idUsuario, @fecha, @total, @estado)";
 
                         int idPedido;
                         using (SqlCommand cmd = new SqlCommand(sqlPedido, cn, tx))
                         {
-                            // Si tu entidad Pedido no tiene IdCliente, usá pedido.Cliente.Id
-                            cmd.Parameters.AddWithValue("@IdCliente", pedido.Client.Id);
-                            cmd.Parameters.AddWithValue("@Fecha", pedido.Fecha);
-                            cmd.Parameters.AddWithValue("@Total", pedido.Total);
-                            idPedido = (int)cmd.ExecuteScalar();
+                            cmd.Parameters.AddWithValue("@idCliente", pedido.Client.Id);
+                            cmd.Parameters.AddWithValue("@idUsuario", pedido.Usuario.Id);
+                            cmd.Parameters.AddWithValue("@fecha", pedido.Fecha);
+                            cmd.Parameters.AddWithValue("@total", pedido.Total);
+                            cmd.Parameters.AddWithValue("@estado", pedido.Estado);
+                            idPedido = (int)cmd.ExecuteScalar()!;
                         }
 
-                        foreach (DetallePedido d in pedido.Detalles)
+                        foreach (DetallePedido detalle in pedido.Detalles)
                         {
-                            string sqlDetalle = @"INSERT INTO DetallePedido (IdPedido, IdProducto, Cantidad, PrecioUnitario)
-                                                  VALUES (@IdPedido, @IdProducto, @Cantidad, @Precio)";
+                            // 2. Línea de detalle
+                            detalleDAO.Insertar(detalle, idPedido, cn, tx);
 
-                            using (SqlCommand cmd = new SqlCommand(sqlDetalle, cn, tx))
+                            // 3. Descuento de stock
+                            if (!detalleDAO.DescontarStock(detalle, cn, tx))
                             {
-                                cmd.Parameters.AddWithValue("@IdPedido", idPedido);
-                                cmd.Parameters.AddWithValue("@IdProducto", d.Producto.Id);
-                                cmd.Parameters.AddWithValue("@Cantidad", d.Cantidad);
-                                cmd.Parameters.AddWithValue("@Precio", d.PrecioUnitario);
-                                cmd.ExecuteNonQuery();
-                            }
-
-                            string sqlStock = @"UPDATE Producto
-                                                SET StockCajas = StockCajas - @Cantidad
-                                                WHERE IdProducto = @IdProducto";
-
-                            using (SqlCommand cmd = new SqlCommand(sqlStock, cn, tx))
-                            {
-                                cmd.Parameters.AddWithValue("@Cantidad", d.Cantidad);
-                                cmd.Parameters.AddWithValue("@IdProducto", d.Producto.Id);
-                                cmd.ExecuteNonQuery();
+                                throw new InvalidOperationException(
+                                    "No hay stock suficiente de " + detalle.Producto.Nombre + ".");
                             }
                         }
 
@@ -136,4 +101,3 @@ namespace Dato
         }
     }
 }
-

@@ -32,8 +32,10 @@ namespace Negocio
                 throw new Exception("Ya existe un producto con ese nombre.");
         }
 
+        // RN-11: solo el administrador da de alta o modifica productos
         public void AgregarProducto(Producto producto)
         {
+            Sesion.ExigirAdministrador();
             producto.Nombre = producto.Nombre.Trim();
             ValidarProducto(producto);
             producto.Id = productoDato.Agregar(producto);
@@ -41,6 +43,7 @@ namespace Negocio
 
         public void EditarProducto(Producto producto)
         {
+            Sesion.ExigirAdministrador();
             producto.Nombre = producto.Nombre.Trim();
             ValidarProducto(producto);
             if (!productoDato.Editar(producto))

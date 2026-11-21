@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Configuration;
 using Entidad;
 using Mapper;
 using Microsoft.Data.SqlClient;
@@ -8,46 +7,41 @@ namespace Dato
 {
     public class DetallePedidoDAO
     {
-
-        private static string Conexion = "TrabajoFinalDB";
-        
         DetallePedidoMapper DetallepedidoMap = new DetallePedidoMapper();
 
-
+        // Trae las líneas de un pedido, cada una con su producto
         public List<DetallePedido> ObtenerPorPedido(int idPedido)
         {
-            try
-            {
-                List<DetallePedido> detalles = new List<DetallePedido>();
+            List<DetallePedido> detalles = new List<DetallePedido>();
 
-                using (SqlConnection sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings[Conexion].ConnectionString))
+            using (SqlConnection sqlConnection = Conexion.CrearConexion())
+            {
+                sqlConnection.Open();
+                string sql = @"SELECT dp.Id_DetallePedido, dp.Cantidad, dp.PrecioUnitario, dp.Descuento,
+                                      p.Id_Producto, p.Nombre, p.Id_Categoria, c.Descripcion AS NombreCategoria,
+                                      p.PrecioCaja, p.StockCajas, p.StockMinimo, p.Activo
+                               FROM DetallePedido dp
+                               INNER JOIN Producto p  ON p.Id_Producto  = dp.Id_Producto
+                               INNER JOIN Categoria c ON c.Id_Categoria = p.Id_Categoria
+                               WHERE dp.Id_Pedido = @idPedido
+                               ORDER BY dp.Id_DetallePedido";
+                using (SqlCommand comando = new SqlCommand(sql, sqlConnection))
                 {
-                    sqlConnection.Open();
-                    string sql = "SELECT Id_Detalle, Id_Producto, Cantidad, PrecioUnitario, Descuento, Subtotal " +
-                                 "FROM DetallePedido WHERE Id_Pedido = @idPedido";
-                    using (SqlCommand comando = new SqlCommand(sql, sqlConnection))
+                    comando.Parameters.AddWithValue("@idPedido", idPedido);
+                    using (SqlDataReader reader = comando.ExecuteReader())
                     {
-                        comando.Parameters.AddWithValue("@idPedido", idPedido);
-                        using (SqlDataReader reader = comando.ExecuteReader())
+                        while (reader.Read())
                         {
-                            while (reader.Read())
-                            {
-                                Producto producto = ProductoMapper.DesdeReader(reader);
-                                detalles.Add(DetallepedidoMap.Map(reader, producto));
-                            }
+                            Producto producto = ProductoMapper.DesdeReader(reader);
+                            detalles.Add(DetallepedidoMap.Map(reader, producto));
                         }
                     }
                 }
-                return detalles;
             }
-            catch (Exception)
-            {
-                throw;
-            }
+            return detalles;
         }
 
-        // Guarda una linea del pedido
-        // Los dos métodos siguientes usan la conexión y la transacción de PedidoDAO.ConfirmarEnTransaccion
+        
         public void Insertar(DetallePedido detalle, int idPedido, SqlConnection conexion, SqlTransaction transaccion)
         {
             string sql = "INSERT INTO DetallePedido (Id_Pedido, Id_Producto, Cantidad, PrecioUnitario, Descuento, Subtotal) " +
@@ -64,7 +58,7 @@ namespace Dato
             }
         }
 
-        // Devuelve false si no había stock suficiente (nadie le ganó de mano en el medio)
+        // Devuelve false si no había stock suficiente
         public bool DescontarStock(DetallePedido detalle, SqlConnection conexion, SqlTransaction transaccion)
         {
             string sql = "UPDATE Producto SET StockCajas = StockCajas - @cantidad " +

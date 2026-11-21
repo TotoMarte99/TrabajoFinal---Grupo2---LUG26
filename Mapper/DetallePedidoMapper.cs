@@ -9,7 +9,7 @@ namespace Mapper
         {
             DetallePedido detalle = new DetallePedido
             {
-                Id = Convert.ToInt32(reader["Id_Detalle"]),
+                Id = Convert.ToInt32(reader["Id_DetallePedido"]),
                 Cantidad = Convert.ToInt32(reader["Cantidad"]),
                 PrecioUnitario = Convert.ToDecimal(reader["PrecioUnitario"]),
                 Descuento = Convert.ToDecimal(reader["Descuento"]),

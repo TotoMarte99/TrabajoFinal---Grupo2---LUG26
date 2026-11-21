@@ -35,6 +35,8 @@ namespace TrabajoFinal___Grupo2___LUG26
         private void Cargar()
         {
             var categorias = categoriaNegocio.ObtenerCategorias();
+            // Primera opción para ver todas las categorías (Id 0 = sin filtro)
+            categorias.Insert(0, new Categoria { Id = 0, Descripcion = "(Todas)" });
 
             var productos = productoNegocio.ObtenerProductos();
 

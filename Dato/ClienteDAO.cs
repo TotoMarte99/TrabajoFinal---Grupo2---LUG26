@@ -10,7 +10,7 @@ namespace Dato
         private static string Conexion = "TrabajoFinalDB";
 
 
-        public void agregarCliente(Cliente cliente)
+        public void Insertar(Cliente cliente)
         {
             try
             {
