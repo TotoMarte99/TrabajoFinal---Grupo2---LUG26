@@ -4,9 +4,13 @@
 
 Integrantes : 
 
-Kopp, Roberto
+Tomás Martelon
+Fabricio Soza
+Gonzalo Layño
+Marina Celeste Oreskovic
+Diego Alejandro Rodriguez Cabrera
+Roberto Kopp
 
-Soza, Fabricio
 
 Descripción de cada entrega parcial:
 
